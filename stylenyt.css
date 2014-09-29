@@ -1,0 +1,60 @@
+body{
+	background-image: url('movie.png');
+	font-family: 'Rajdhani', sans-serif;
+	text-align: center;
+	color: #b19cd9;
+}
+
+div.transbox{
+	position: relative;
+	top: 100px;
+	left: 25%;
+	padding-left: 30px;
+	padding-right: 30px;
+	opacity: 0.9;
+	bottom: 100px;
+}
+
+h2{
+	text-align: center;
+	font-size: 40px;
+	color: white;
+	text-shadow: 2px 2px #b19cd9;
+}
+
+h5{
+	font-style: bold;
+	font-size: 20px;
+}
+
+h4{
+	font-size: 30px;
+}
+
+input{
+	width: 300px;
+	height: 40px;
+	text-align: center;
+	margin: 30px 42%;
+	font-size: 24px;
+	background: rgba(255,255,255,0.2);
+	color: white;
+	border: none;
+	outline: none;
+}
+
+button{
+	outline: none;
+	font-size: 1em;
+	height: 2em;
+	width: 10em;
+}
+
+#theResults{
+	margin-bottom: 100px;
+	border-top: 20px;
+	width: 50%;
+	height: 70%;
+	background-color: black;
+	border: 50px;
+}
