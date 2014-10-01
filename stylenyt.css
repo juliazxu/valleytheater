@@ -7,8 +7,7 @@ body{
 
 div.transbox{
 	position: relative;
-	top: 100px;
-	left: 25%;
+	margin: 150px auto;
 	padding-left: 30px;
 	padding-right: 30px;
 	opacity: 0.9;
@@ -18,8 +17,8 @@ div.transbox{
 h2{
 	text-align: center;
 	font-size: 40px;
-	color: white;
-	text-shadow: 2px 2px #b19cd9;
+	color: #b19cd9;
+	text-shadow: 2px 2px #000000;
 }
 
 h5{
@@ -32,10 +31,11 @@ h4{
 }
 
 input{
+	position: relative;
 	width: 300px;
 	height: 40px;
 	text-align: center;
-	margin: 30px 42%;
+	margin: auto;
 	font-size: 24px;
 	background: rgba(255,255,255,0.2);
 	color: white;
@@ -43,7 +43,8 @@ input{
 	outline: none;
 }
 
-button{
+#theButton{
+	margin: auto;
 	outline: none;
 	font-size: 1em;
 	height: 2em;
@@ -57,4 +58,27 @@ button{
 	height: 70%;
 	background-color: black;
 	border: 50px;
+	/*display: none;*/
+}
+
+#loading{
+	position: relative;
+	display: none;
+	margin: auto;
+}
+
+.slick-prev:before, .slick-next:before{
+	font-size: 75px;
+}
+
+.slick-prev {
+	left: -75px;
+}
+
+.slick-next {
+	right: -20px;
+}
+
+.slick-prev:hover, .slick-prev:focus, .slick-next:hover, .slick-next:focus {
+
 }
