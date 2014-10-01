@@ -63,14 +63,19 @@ function makeYoutubeRequest(word, html){
 	});
 }
 
+function start(){
+
+	//displays loading gif instead of empty results box
+		
+	}
+
+
 $(document).ready(function(){
 	console.log("We are loaded!");
 	$('#theResults').slick();
+	$('#form').submit(function(e){
+		e.preventDefault();
 
-	//button listener
-	$('#theButton').click(function(){
-
-		//displays loading gif instead of empty results box
 		$('#loading').css("display", "initial");
 		$('#theResults').css("display", "none");
 		for (i=0;i<4;i++){
@@ -79,8 +84,9 @@ $(document).ready(function(){
 		var searchTerm = $('#theInput').val();
 		
 		//function to make NYT API request
+		console.log("YAYA");
 		searchNYT(searchTerm);
-
-		});
+		return false;
+	});
 
 });

@@ -36,7 +36,7 @@ label.button span {
 }
 
 /* Hover the button */
-button:hover,
+/*button:hover,
 input[type='submit']:hover,
 a.button:hover,
 label.button:hover span,
@@ -48,10 +48,10 @@ label.button input:focus + span {
     padding: .3em 1em .4em;
     transition: all .1s ease;
     box-shadow: inset 0 -.1em rgba(0,0,0,.3);
-}
+}*/
 
 /* Press the button */
-button:active,
+/*button:active,
 input[type='submit']:active,
 a.button:active,
 label.button span:active,
@@ -59,7 +59,7 @@ label.button input:checked + span {
     margin: .2em 0 .2em;
     padding: .3em 1em .3em;
     box-shadow: inset 0 .1em .1em rgba(0,0,0,0.3);
-}
+}*/
 
 /* Different type of buttons */
 button.primary,
