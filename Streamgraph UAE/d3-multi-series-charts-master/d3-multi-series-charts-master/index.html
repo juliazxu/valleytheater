@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/tabcontent.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <style>
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: #121401;
+        stroke-width: 2px;
+        shape-rendering: crispEdges;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 style="padding-left:60px;">Historical UAE Political Data as Measured by World Bank Estimates</h2>
+    <script src="lib/d3.js"></script>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/bootstrap.js"></script>
+    <script src="lib/tabcontent.js"></script>
+    <script>
+      var margin = {top: 20, right: 40, bottom: 30, left: 40},
+          width  = 1350 - margin.left - margin.right,
+          height = 500  - margin.top  - margin.bottom;
+
+      var x = d3.scale.ordinal()
+          .rangeRoundBands([0, width], .1);
+
+      var y = d3.scale.linear()
+          .rangeRound([height, 0]);
+
+      var xAxis = d3.svg.axis()
+          .scale(x)
+          .orient("bottom");
+
+      var yAxis = d3.svg.axis()
+          .scale(y)
+          .orient("left");
+
+      var line = d3.svg.line()
+          .interpolate("cardinal")
+          .x(function (d) { return x(d.label) + x.rangeBand() / 2; })
+          .y(function (d) { return y(d.value); });
+
+      var color = d3.scale.ordinal()
+          .range(["#ffaa41","#ea4d4d","#71ceea","#48316b","#00a86b"]);
+
+      var svg = d3.select("body").append("svg")
+          .attr("width",  width  + margin.left + margin.right)
+          .attr("height", height + margin.top  + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      d3.csv("data/uaepolitics.csv", function (error, data) {
+
+        var labelVar = 'quarter';
+        var varNames = d3.keys(data[0]).filter(function (key) { return key !== labelVar;});
+        color.domain(varNames);
+
+        var seriesData = varNames.map(function (name) {
+          return {
+            name: name,
+            values: data.map(function (d) {
+              return {name: name, label: d[labelVar], value: +d[name]};
+            })
+          };
+        });
+
+        x.domain(data.map(function (d) { return d.quarter; }));
+        y.domain([
+          d3.min(seriesData, function (c) { 
+            return d3.min(c.values, function (d) { return d.value; });
+          }),
+          d3.max(seriesData, function (c) { 
+            return d3.max(c.values, function (d) { return d.value; });
+          })
+        ]);
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+          .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Standard Deviation Relative to Other Countries");
+
+        var series = svg.selectAll(".series")
+            .data(seriesData)
+          .enter().append("g")
+            .attr("class", "series");
+
+        series.append("path")
+          .attr("class", "line")
+          .attr("d", function (d) { return line(d.values); })
+          .style("stroke", function (d) { return color(d.name); })
+          .style("stroke-width", "4px")
+          .style("fill", "none")
+
+        series.selectAll(".point")
+          .data(function (d) { return d.values; })
+          .enter().append("circle")
+           .attr("class", "point")
+           .attr("cx", function (d) { return x(d.label) + x.rangeBand()/2; })
+           .attr("cy", function (d) { return y(d.value); })
+           .attr("r", "5px")
+           .style("fill", function (d) { return color(d.name); })
+           .style("stroke", "grey")
+           .style("stroke-width", "2px")
+           .on("mouseover", function (d) { showPopover.call(this, d); })
+           .on("mouseout",  function (d) { removePopovers(); })
+
+        // var legend = svg.selectAll(".legend")
+        //     .data(varNames.slice())
+        //     .enter().append("g")
+        //     .attr("class", "legend")
+        //     .attr("transform", function (d, i) { return "translate(155," + i * 20 + ")"; });
+
+        // legend.append("rect")
+        //     .attr("x", width - 10)
+        //     .attr("width", 10)
+        //     .attr("height", 10)
+        //     .style("fill", color)
+        //     .style("stroke", "grey");
+
+        // legend.append("text")
+        //     .attr("x", width - 12)
+        //     .attr("y", 6)
+        //     .attr("dy", ".35em")
+        //     .style("text-anchor", "end")
+        //     .text(function (d) { return d; });
+
+        function removePopovers () {
+          $('.popover').each(function() {
+            $(this).remove();
+          }); 
+        }
+
+        function showPopover (d) {
+          $(this).popover({
+            title: d.name,
+            placement: 'auto top',
+            container: 'body',
+            trigger: 'manual',
+            html : true,
+            content: function() { 
+              return "Year: " + d.label + 
+                     "<br/>Score: " + d3.format(",")(d.value ? d.value: d.y1 - d.y0); }
+          });
+          $(this).popover('show')
+        }
+      });
+    </script>
+    <div style="width: 1200px; margin: 0 auto; padding: 50px 0 40px;">
+        <ul class="tabs" data-persist="true">
+            <li><a href="#view1" class="tab1">Control of Corruption</a></li>
+            <li><a href="#view2" class="tab2">Government Effectiveness</a></li>
+            <li><a href="#view3" class="tab3">Political Stability and Absence of Violence or Terrorism</a></li>
+            <li><a href="#view4" class="tab4">Rule of Law</a></li>
+            <li><a href="#view5" class="tab5">Voice and Accountability</a></li>
+        </ul>
+        <div class="tabcontents">
+            <div id="view1">
+                <p>Control of Corruption captures perceptions of the extent to which public power is exercised for private gain, including both petty and grand forms of corruption, as well as "capture of the state by elites and private interests. <br><br>All estimates give the country's score on the aggregate indicator, in units of a standard normal distribution, i.e. ranging from approximately -2.5 to 2.5. The line graphs on each page show the country's percentile rank on each of the six governance indicators. They are composite measures based on a large number of underlying data sources. Percentile ranks indicate the percentage of countries 
+worldwide that rank lower than the indicated country, so that higher values indicate better governance scores.<br><br>For more information, see the <a href="http://info.worldbank.org/governance/wgi/pdf/c8.pdf">Worldwide Governance Indicator for the UAE.</a></p>
+                
+            </div>
+            <div id="view2">
+                <p>Government Effectiveness captures perceptions of the quality of public services, the quality of the civil service and the degree of its independence from political pressures, the quality of policy formulation and implementation, and the credibility of the government's commitment to such policies.<br><br>All estimates give the country's score on the aggregate indicator, in units of a standard normal distribution, i.e. ranging from approximately -2.5 to 2.5. The line graphs on each page show the country's percentile rank on each of the six governance indicators. They are composite measures based on a large number of underlying data sources. Percentile ranks indicate the percentage of countries 
+worldwide that rank lower than the indicated country, so that higher values indicate better governance scores.<br><br>For more information, see the <a href="http://info.worldbank.org/governance/wgi/pdf/c8.pdf">Worldwide Governance Indicator for the UAE.</a></p>                
+            </div>
+            <div id="view3">
+                <p>Political Stability and Absence of Violence/Terrorism captures perceptions of the likelihood that the government will be destabilized or overthrown by unconstitutional or violent means, including politically-motivated violence and terrorism.</p><br>All estimates give the country's score on the aggregate indicator, in units of a standard normal distribution, i.e. ranging from approximately -2.5 to 2.5. The line graphs on each page show the country's percentile rank on each of the six governance indicators. They are composite measures based on a large number of underlying data sources. Percentile ranks indicate the percentage of countries 
+worldwide that rank lower than the indicated country, so that higher values indicate better governance scores.<br><br>For more information, see the <a href="http://info.worldbank.org/governance/wgi/pdf/c8.pdf">Worldwide Governance Indicator for the UAE.</a></div>
+            <div id="view4">
+                <p>Rule of Law captures perceptions of the extent to which agents have confidence in and abide by the rules of society, and in particular the quality of contract enforcement, property rights, the police, and the courts, as well as the likelihood of crime and violence.</p><br>All estimates give the country's score on the aggregate indicator, in units of a standard normal distribution, i.e. ranging from approximately -2.5 to 2.5. The line graphs on each page show the country's percentile rank on each of the six governance indicators. They are composite measures based on a large number of underlying data sources. Percentile ranks indicate the percentage of countries 
+worldwide that rank lower than the indicated country, so that higher values indicate better governance scores.<br><br>For more information, see the <a href="http://info.worldbank.org/governance/wgi/pdf/c8.pdf">Worldwide Governance Indicator for the UAE.</a></div>
+            <div id="view5">
+                <p>Voice and Accountability captures perceptions of the extent to which a country's citizens are able to participate in selecting their government, as well as freedom of expression, freedom of association, and a free media.</p>All estimates give the country's score on the aggregate indicator, in units of a standard normal distribution, i.e. ranging from approximately -2.5 to 2.5. The line graphs on each page show the country's percentile rank on each of the six governance indicators. They are composite measures based on a large number of underlying data sources. Percentile ranks indicate the percentage of countries 
+worldwide that rank lower than the indicated country, so that higher values indicate better governance scores.<br><br>For more information, see the <a href="http://info.worldbank.org/governance/wgi/pdf/c8.pdf">Worldwide Governance Indicator for the UAE.</a></div>                
+            </div>
+        </div>
+    </div>
+  </body>
+</html>

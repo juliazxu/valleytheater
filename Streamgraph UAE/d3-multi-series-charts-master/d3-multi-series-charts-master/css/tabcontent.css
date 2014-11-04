@@ -1,0 +1,68 @@
+﻿/* Tab Content - menucool.com */
+ul.tabs
+{
+    padding: 14px 0 8px;
+    margin:0;
+    font-size: 0;
+    list-style-type: none;
+    text-align: center; /*set to left, center, or right to align the tabs as desired*/
+/*    background: #DDDDE3;
+*/    border:1px solid #CCC;
+    border-bottom:none;
+    border-radius: 2px 2px 0 0;
+}
+        
+ul.tabs li
+{
+    display: inline;
+    margin: 0;
+    margin-right: 2px;/*distance between tabs*/
+    font: normal 15px "Open Sans", sans-serif;
+}
+        
+ul.tabs li a
+{
+    text-decoration: none;
+    position: relative;
+    padding: 8px 22px;
+    color: white;
+    border-radius: 3px 3px 0 0;
+    outline:none;
+}
+  
+        
+ul.tabs li a:hover
+{
+    text-decoration: underline;
+}
+        
+ul.tabs li.selected a
+{
+    position: relative;
+    top: 0px;
+    font-weight:bold;
+/*    background: #FFF;*/
+    border: 1px solid #AAA;
+    border-bottom: 1px solid #FFF;
+    color: gray;
+}
+        
+        
+ul.tabs li.selected a:hover, ul.tabs li.selected a:hover
+{
+    text-decoration: none;
+}
+
+div.tabcontents
+{
+    border: 1px solid #CCC; padding: 30px;
+    border-top-color:#AAA;
+    background-color:#FFF;
+    border-radius: 0 0 2px 2px;
+}
+
+.tabs li a.tab1 {background-color:#ffaa41;}
+.tabs li a.tab2 {background-color:#ea4d4d;}
+.tabs li a.tab3 {background-color:#71ceea;}
+.tabs li a.tab4 {background-color:#48316b;}
+.tabs li a.tab5 {background-color:#00a86b;}
